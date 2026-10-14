@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { useHealth } from '../../hooks/useHealth';
 import { useTranslation } from 'react-i18next';
 import { arrayMove } from '@dnd-kit/sortable';
 import { DragEndEvent } from '@dnd-kit/core';
@@ -31,6 +32,18 @@ const Dashboard: React.FC<DashboardProps> = React.memo(
     const { solarMonitoringEnabled, preferredDashboardSortOption, distanceUnit } = useSettings();
     const { sourceId } = useSource();
     const sourceQuery = sourceId ? `?sourceId=${encodeURIComponent(sourceId)}` : '';
+
+    const [quietHours, setQuietHours] = useState(() => {
+      try { return localStorage.getItem('fuggedaboutit.quietHours') === 'true'; }
+      catch { return false; }
+    });
+    const { data: serverHealth, isError: healthUnavailable } = useHealth();
+    const toggleQuietHours = () => {
+      const next = !quietHours;
+      setQuietHours(next);
+      try { localStorage.setItem('fuggedaboutit.quietHours', String(next)); } catch { /* Storage unavailable. */ }
+      window.dispatchEvent(new Event('fuggedaboutit-preferences'));
+    };
 
     // Modal state
     const [showAddWidgetModal, setShowAddWidgetModal] = useState(false);
@@ -243,6 +256,13 @@ const Dashboard: React.FC<DashboardProps> = React.memo(
 
     return (
       <div className="dashboard">
+        <section className="jersey-monitor-status" aria-label="Network monitoring controls">
+          <span role="status">{healthUnavailable ? '🔴 Backend unreachable' : serverHealth ? '🟢 Backend online' : '🟡 Checking backend'}</span>
+          <span>{serverHealth ? 'Uptime: ' + Math.floor(serverHealth.uptime / 60000) + ' min' : 'Awaiting status'}</span>
+          <button type="button" aria-pressed={quietHours} onClick={toggleQuietHours}>
+            {quietHours ? '🌙 Quiet hours ON (10 PM–7 AM)' : '🔔 Quiet hours OFF'}
+          </button>
+        </section>
         <DashboardHeader
           favoritesCount={favorites.length}
           daysToView={daysToView}
