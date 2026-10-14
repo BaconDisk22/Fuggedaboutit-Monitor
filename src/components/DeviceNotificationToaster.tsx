@@ -9,7 +9,7 @@
  * component just maps level → severity and shows the toast.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useWebSocketContext } from '../contexts/WebSocketContext';
 import { useToast } from './ToastContainer';
 
@@ -36,12 +36,18 @@ export default function DeviceNotificationToaster(): null {
   const { state } = useWebSocketContext();
   const { showToast } = useToast();
   const socket = state.socket;
+  const lastAlert = useRef(new Map<string, number>());
 
   useEffect(() => {
     if (!socket) return;
 
     const handler = (data: ClientNotificationEvent) => {
       if (!data || typeof data.message !== 'string' || data.message.length === 0) return;
+      const key = String(data.level) + ':' + data.message;
+      const now = Date.now();
+      if (now - (lastAlert.current.get(key) ?? 0) < 60000) return;
+      if (lastAlert.current.size > 100) lastAlert.current.clear();
+      lastAlert.current.set(key, now);
       showToast(data.message, toastTypeForLevel(data.level), 8000);
       // Respect OS permissions; never request notification access implicitly.
       // Only surface warnings/errors when the app is in the background.
