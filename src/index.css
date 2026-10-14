@@ -39,3 +39,14 @@ code {
     width: 100%;
   }
 }
+/* Fuggedaboutit Monitor: accessible Garden State identity layer. */
+:root {
+  --jersey-blue: #003b71;
+  --jersey-buff: #f0dc82;
+  --turnpike-asphalt: #121820;
+  --parkway-green: #22c55e;
+  --taylor-ham-red: #d62828;
+  --disco-fries-gold: #ffcc33;
+}
+::selection { background: var(--jersey-buff); color: var(--turnpike-asphalt); }
+:focus-visible { outline: 2px solid var(--disco-fries-gold); outline-offset: 2px; }
