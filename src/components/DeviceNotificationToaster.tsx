@@ -46,7 +46,11 @@ export default function DeviceNotificationToaster(): null {
     };
     readPreference();
     window.addEventListener('storage', readPreference);
-    return () => window.removeEventListener('storage', readPreference);
+    window.addEventListener('fuggedaboutit-preferences', readPreference);
+    return () => {
+      window.removeEventListener('storage', readPreference);
+      window.removeEventListener('fuggedaboutit-preferences', readPreference);
+    };
   }, []);
 
   useEffect(() => {
