@@ -1,0 +1,45 @@
+name: Jersey Edition macOS Intel Validation
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
+      - '.github/workflows/jersey-macos-intel.yml'
+  push:
+    tags:
+      - 'jersey-v*'
+permissions:
+  contents: read
+jobs:
+  validate-macos-intel:
+    runs-on: macos-15-intel
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Check TypeScript
+        run: npm run typecheck
+      - name: Build frontend
+        run: npm run build
+      - name: Build server
+        run: npm run build:server
+      - name: Verify macOS Intel runtime and build outputs
+        run: |
+          test "$(uname -m)" = "x86_64"
+          test -f dist/index.html
+          test -f dist/server/server.js
+          node --version
+      - name: Upload built web application for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: jersey-macos-intel-web-build
+          path: dist/
+          retention-days: 7
