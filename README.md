@@ -8,6 +8,23 @@
 
 **The look:** Jersey Blue `#003B71`, Jersey Buff `#F0DC82`, Turnpike Asphalt `#121820`, Parkway Green `#22C55E`, and Disco Fries Gold `#FFCC33`. No, we ain't arguing whether it's pork roll or Taylor ham. (Okay, maybe a little.)
 
+### 📸 Jersey Edition screenshots
+
+These images are **automatically captured from demonstration mode**, using synthetic node and alert data (not live radio telemetry). After the screenshot workflow succeeds on `main`, GitHub Actions commits updated images into `docs/screenshots/` so they appear directly in this README.
+
+![FUGGEDABOUTIT MONITOR Jersey desktop demonstration](docs/screenshots/jersey-demo-desktop.png)
+
+<details>
+<summary>More demo screenshots — alerts and mobile</summary>
+
+![Jersey simulated alerts demonstration](docs/screenshots/jersey-demo-alerts.png)
+
+![Jersey mobile demonstration](docs/screenshots/jersey-demo-mobile.png)
+
+</details>
+
+[Open the interactive demonstration](public/demo.html) · [Screenshot automation](.github/workflows/jersey-screenshots.yml)
+
 ### 🖥️ Intel Mac plans
 
 We're targeting a click-to-open **Intel macOS Tahoe** application (`.app` and `.dmg`). **Not built or verified yet.** Until then, follow the upstream web/Docker installation instructions below. The Docker image shown below is the **original upstream MeshMonitor**, not this Jersey-customized fork.
