@@ -9,7 +9,7 @@
  * component just maps level → severity and shows the toast.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useWebSocketContext } from '../contexts/WebSocketContext';
 import { useToast } from './ToastContainer';
 
@@ -36,13 +36,48 @@ export default function DeviceNotificationToaster(): null {
   const { state } = useWebSocketContext();
   const { showToast } = useToast();
   const socket = state.socket;
+  const lastAlert = useRef(new Map<string, number>());
+  const quietHoursEnabled = useRef(false);
+
+  useEffect(() => {
+    const readPreference = () => {
+      try { quietHoursEnabled.current = localStorage.getItem('fuggedaboutit.quietHours') === 'true'; }
+      catch { quietHoursEnabled.current = false; }
+    };
+    readPreference();
+    window.addEventListener('storage', readPreference);
+    window.addEventListener('fuggedaboutit-preferences', readPreference);
+    return () => {
+      window.removeEventListener('storage', readPreference);
+      window.removeEventListener('fuggedaboutit-preferences', readPreference);
+    };
+  }, []);
 
   useEffect(() => {
     if (!socket) return;
 
     const handler = (data: ClientNotificationEvent) => {
       if (!data || typeof data.message !== 'string' || data.message.length === 0) return;
+      const key = String(data.level) + ':' + data.message;
+      const now = Date.now();
+      if (now - (lastAlert.current.get(key) ?? 0) < 60000) return;
+      if (lastAlert.current.size > 100) lastAlert.current.clear();
+      lastAlert.current.set(key, now);
       showToast(data.message, toastTypeForLevel(data.level), 8000);
+      // Respect OS permissions; never request notification access implicitly.
+      // Only surface warnings/errors when the app is in the background.
+      const hour = new Date().getHours();
+      const isQuietTime = quietHoursEnabled.current && (hour >= 22 || hour < 7);
+      if (!isQuietTime && data.level >= LEVEL_WARNING && typeof document !== 'undefined' && document.hidden &&
+          typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        try {
+          const notification = new Notification('🤌 Fuggedaboutit Monitor', {
+            body: data.message.slice(0, 240),
+            tag: `radio-alert-${data.level}`,
+          });
+          notification.onclick = () => { window.focus(); notification.close(); };
+        } catch { /* Unsupported desktop notification environment: toast remains available. */ }
+      }
     };
 
     socket.on('client-notification', handler);

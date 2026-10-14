@@ -39,3 +39,33 @@ code {
     width: 100%;
   }
 }
+/* Fuggedaboutit Monitor: accessible Garden State identity layer. */
+:root {
+  --jersey-blue: #003b71;
+  --jersey-buff: #f0dc82;
+  --turnpike-asphalt: #121820;
+  --parkway-green: #22c55e;
+  --taylor-ham-red: #d62828;
+  --disco-fries-gold: #ffcc33;
+}
+::selection { background: var(--jersey-buff); color: var(--turnpike-asphalt); }
+:focus-visible { outline: 2px solid var(--disco-fries-gold); outline-offset: 2px; }
+
+/* Jersey network status strip: compact, accessible, and responsive. */
+.jersey-monitor-status { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem; padding: 0.75rem 1rem; margin-bottom: 1rem; border: 1px solid var(--jersey-blue); border-radius: 0.65rem; background: var(--turnpike-asphalt); color: #f5f5f5; }
+.jersey-monitor-status button { margin-left: auto; padding: 0.45rem 0.75rem; border: 1px solid var(--jersey-buff); border-radius: 0.45rem; background: var(--jersey-blue); color: #fff; cursor: pointer; }
+.jersey-monitor-status button:hover { background: #14558e; }
+@media (max-width: 650px) { .jersey-monitor-status button { margin-left: 0; width: 100%; } }
+
+/* Fuggedaboutit Jersey Command Center */
+.jersey-dashboard-heading{display:flex;justify-content:space-between;align-items:center;gap:1rem;padding:1.5rem;margin-bottom:1rem;border-radius:1rem;background:linear-gradient(115deg,#003b71,#121820);color:#f5f5f5;border-bottom:3px solid #f0dc82}
+.jersey-dashboard-heading h2{font-size:clamp(1.4rem,3vw,2rem);margin:.35rem 0;font-weight:800}
+.jersey-dashboard-heading p{opacity:.9;margin:0}
+.jersey-eyebrow{font-size:.72rem;letter-spacing:.14em;color:#f0dc82;font-weight:700}
+.jersey-live-pill{white-space:nowrap;color:#22c55e;border:1px solid #22c55e;padding:.5rem .7rem;border-radius:999px;font-size:.7rem;font-weight:800}
+.jersey-metric-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem;margin-bottom:1.2rem}
+.jersey-metric{display:flex;flex-direction:column;gap:.3rem;background:#202b38;color:#f5f5f5;border:1px solid #003b71;border-radius:.75rem;padding:1rem}
+.jersey-metric small{color:#f0dc82;letter-spacing:.08em;font-weight:700}
+.jersey-metric strong{font-size:1.7rem;line-height:1.2}
+.jersey-metric span{font-size:.8rem;opacity:.8}
+@media(max-width:650px){.jersey-metric-row{grid-template-columns:1fr}.jersey-dashboard-heading{flex-direction:column;align-items:flex-start}}
