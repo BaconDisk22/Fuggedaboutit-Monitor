@@ -1,0 +1,68 @@
+name: Publish Jersey Intel Build
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'vite.config.ts'
+      - '.github/workflows/jersey-release.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: jersey-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  release:
+    if: github.repository == 'BaconDisk22/Fuggedaboutit-Monitor'
+    runs-on: macos-15-intel
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Validate
+        run: |
+          npm run lint:ci
+          npm run typecheck
+          npm run test:run
+      - name: Build web UI and Node server
+        run: |
+          npm run build
+          npm run build:server
+          test "$(uname -m)" = "x86_64"
+          test -f dist/index.html
+          test -f dist/server/server.js
+      - name: Assemble Intel Mac server distribution
+        run: |
+          mkdir -p release-bundle
+          cp -R dist release-bundle/
+          cp package.json package-lock.json release-bundle/
+          cat > release-bundle/README.txt <<'EOF'
+          FUGGEDABOUTIT MONITOR — macOS Intel web/server build
+          This archive is NOT a standalone .app or .dmg.
+          Requires Node.js 22+ and a terminal.
+          In this directory run: npm ci --omit=dev
+          Set DATABASE_PATH to a writable local path and DATA_DIR to a writable directory.
+          Run: npm start
+          Then open http://localhost:3001
+          Native dependencies are installed for the host at npm ci time.
+          EOF
+          ditto -c -k --sequesterRsrc --keepParent release-bundle Fuggedaboutit-Monitor-macOS-Intel-server.zip
+      - name: Publish only after every gate succeeds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="jersey-build-${GITHUB_RUN_NUMBER}"
+          gh release create "$tag" Fuggedaboutit-Monitor-macOS-Intel-server.zip \
+            --target "$GITHUB_SHA" \
+            --title "FUGGEDABOUTIT MONITOR Intel build ${GITHUB_RUN_NUMBER}" \
+            --notes "Validated Intel macOS web/server build. Requires Node.js 22+ and npm; not yet a double-clickable Mac application. Automated release after successful lint, typecheck, tests, and builds." \
+            --prerelease
