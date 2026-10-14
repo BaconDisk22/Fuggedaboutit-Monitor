@@ -37,6 +37,17 @@ export default function DeviceNotificationToaster(): null {
   const { showToast } = useToast();
   const socket = state.socket;
   const lastAlert = useRef(new Map<string, number>());
+  const quietHoursEnabled = useRef(false);
+
+  useEffect(() => {
+    const readPreference = () => {
+      try { quietHoursEnabled.current = localStorage.getItem('fuggedaboutit.quietHours') === 'true'; }
+      catch { quietHoursEnabled.current = false; }
+    };
+    readPreference();
+    window.addEventListener('storage', readPreference);
+    return () => window.removeEventListener('storage', readPreference);
+  }, []);
 
   useEffect(() => {
     if (!socket) return;
@@ -51,7 +62,9 @@ export default function DeviceNotificationToaster(): null {
       showToast(data.message, toastTypeForLevel(data.level), 8000);
       // Respect OS permissions; never request notification access implicitly.
       // Only surface warnings/errors when the app is in the background.
-      if (data.level >= LEVEL_WARNING && typeof document !== 'undefined' && document.hidden &&
+      const hour = new Date().getHours();
+      const isQuietTime = quietHoursEnabled.current && (hour >= 22 || hour < 7);
+      if (!isQuietTime && data.level >= LEVEL_WARNING && typeof document !== 'undefined' && document.hidden &&
           typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         try {
           const notification = new Notification('🤌 Fuggedaboutit Monitor', {
