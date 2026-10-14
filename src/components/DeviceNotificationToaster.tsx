@@ -43,6 +43,18 @@ export default function DeviceNotificationToaster(): null {
     const handler = (data: ClientNotificationEvent) => {
       if (!data || typeof data.message !== 'string' || data.message.length === 0) return;
       showToast(data.message, toastTypeForLevel(data.level), 8000);
+      // Respect OS permissions; never request notification access implicitly.
+      // Only surface warnings/errors when the app is in the background.
+      if (data.level >= LEVEL_WARNING && typeof document !== 'undefined' && document.hidden &&
+          typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+        try {
+          const notification = new Notification('🤌 Fuggedaboutit Monitor', {
+            body: data.message.slice(0, 240),
+            tag: `radio-alert-${data.level}`,
+          });
+          notification.onclick = () => { window.focus(); notification.close(); };
+        } catch { /* Unsupported desktop notification environment: toast remains available. */ }
+      }
     };
 
     socket.on('client-notification', handler);
