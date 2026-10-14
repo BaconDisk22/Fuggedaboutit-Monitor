@@ -1,4 +1,24 @@
-# MeshMonitor
+# 🤌 FUGGEDABOUTIT MONITOR
+
+### What exit? What node? Fuggedaboutit! 🇺🇸🍕
+
+**AY, HOW YOU DOIN'?** Welcome to the Garden State's unofficial mesh network headquarters. Whether you're down the Shore, stuck on the Parkway, or checking the crew from your favorite 24-hour diner, keep an eye on your **Meshtastic, MeshCore, and MQTT** networks without breaking a sweat.
+
+> **The Crew** = nodes · **What Exit?!** = map · **Parkway Traffic** = network health · **Tony's Office** = settings. These are planned Jersey-style interface labels; the underlying app is still being rebranded.
+
+**The look:** Jersey Blue `#003B71`, Jersey Buff `#F0DC82`, Turnpike Asphalt `#121820`, Parkway Green `#22C55E`, and Disco Fries Gold `#FFCC33`. No, we ain't arguing whether it's pork roll or Taylor ham. (Okay, maybe a little.)
+
+### 🖥️ Intel Mac plans
+
+We're targeting a click-to-open **Intel macOS Tahoe** application (`.app` and `.dmg`). **Not built or verified yet.** Until then, follow the upstream web/Docker installation instructions below. The Docker image shown below is the **original upstream MeshMonitor**, not this Jersey-customized fork.
+
+### 🤝 Respect the family
+
+This is an independently branded fork of [Yeraze's MeshMonitor](https://github.com/Yeraze/meshmonitor). All upstream credit, licensing, and original project documentation remain intact. See [our Jersey branding guide](JERSEY_BRANDING.md) for the roadmap.
+
+---
+
+## 📚 Original MeshMonitor documentation and installation
 
 [![CI](https://github.com/Yeraze/meshmonitor/actions/workflows/ci.yml/badge.svg)](https://github.com/Yeraze/meshmonitor/actions/workflows/ci.yml)
 [![Docker Image](https://ghcr-badge.egpl.dev/yeraze/meshmonitor/latest_tag?color=%235b4566&ignore=latest,main,dev&label=version&trim=)](https://github.com/Yeraze/meshmonitor/pkgs/container/meshmonitor)
@@ -378,6 +398,6 @@ This project is licensed under the BSD-3-Clause License - see the [LICENSE](LICE
 </a>
 ---
 
-**MeshMonitor** - Monitor your mesh, beautifully. 🌐✨
+**FUGGEDABOUTIT MONITOR** — Keep your crew connected, capisce? 🤌 (Based on MeshMonitor.)
 
 _This application is brought to you with help from [Claude Code](https://claude.ai/code)._
