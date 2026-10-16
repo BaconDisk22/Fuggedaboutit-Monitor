@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'public/demo.html'
+      - 'README.md'
       - 'scripts/capture-jersey-demo.mjs'
       - '.github/workflows/jersey-screenshots.yml'
   push:
