@@ -19,6 +19,8 @@ jobs:
   release:
     if: github.repository == 'BaconDisk22/Fuggedaboutit-Monitor'
     runs-on: macos-15-intel
+    env:
+      NODE_OPTIONS: --max-old-space-size=6144
     timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
