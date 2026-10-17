@@ -71,7 +71,7 @@ export default function DeviceNotificationToaster(): null {
       if (!isQuietTime && data.level >= LEVEL_WARNING && typeof document !== 'undefined' && document.hidden &&
           typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         try {
-          const notification = new Notification('🤌 Fuggedaboutit Monitor', {
+          const notification = new Notification('Fuggedaboutit Monitor', {
             body: data.message.slice(0, 240),
             tag: `radio-alert-${data.level}`,
           });

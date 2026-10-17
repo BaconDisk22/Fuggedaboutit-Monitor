@@ -24,6 +24,8 @@ jobs:
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    env:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
     permissions:
       contents: read
       pull-requests: write  # Changed from read to write to allow posting comments
@@ -37,7 +39,12 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Claude review unavailable
+        if: ${{ env.CLAUDE_CODE_OAUTH_TOKEN == '' }}
+        run: echo 'Claude review skipped because no Claude OAuth token is configured. Build, lint, test and CodeQL checks remain independent.'
+
       - name: Run Claude Code Review
+        if: ${{ env.CLAUDE_CODE_OAUTH_TOKEN != '' }}
         id: claude-review
         uses: anthropics/claude-code-action@beta
         with:
