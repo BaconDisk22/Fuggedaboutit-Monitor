@@ -256,12 +256,12 @@ const Dashboard: React.FC<DashboardProps> = React.memo(
 
     return (
       <div className="dashboard">
-        <div className="jersey-dashboard-heading"><div><span className="jersey-eyebrow">THE FAMILY NETWORK • LIVE OPERATIONS</span><h2>🤌 Fuggedaboutit Command Center</h2><p>What exit? What node? Keep the crew connected.</p></div><span className="jersey-live-pill">● NETWORK WATCH</span></div>
+        <div className="jersey-dashboard-heading"><div><span className="jersey-eyebrow">THE FAMILY NETWORK • LIVE OPERATIONS</span><h2>Fuggedaboutit Command Center</h2><p>What exit? What node? Keep the crew connected.</p></div><span className="jersey-live-pill">NETWORK WATCH</span></div>
         <section className="jersey-monitor-status" aria-label="Network monitoring controls">
-          <span role="status">{healthUnavailable ? '🔴 Backend unreachable' : serverHealth ? '🟢 Backend online' : '🟡 Checking backend'}</span>
+          <span role="status">{healthUnavailable ? 'Backend unreachable' : serverHealth ? 'Backend online' : 'Checking backend'}</span>
           <span>{serverHealth ? 'Uptime: ' + Math.floor(serverHealth.uptime / 60000) + ' min' : 'Awaiting status'}</span>
           <button type="button" aria-pressed={quietHours} onClick={toggleQuietHours}>
-            {quietHours ? '🌙 Quiet hours ON (10 PM–7 AM)' : '🔔 Quiet hours OFF'}
+            {quietHours ? 'Quiet hours ON (10 PM–7 AM)' : 'Quiet hours OFF'}
           </button>
         </section>
         <DashboardHeader
@@ -272,7 +272,7 @@ const Dashboard: React.FC<DashboardProps> = React.memo(
         />
 
         <div className="jersey-metric-row" aria-label="Network overview">
-          <div className="jersey-metric"><small>KNOWN NODES</small><strong>{nodes.length}</strong><span>In selected source</span></div>
+          <div className="jersey-metric"><small>KNOWN NODES</small><strong>{nodes.size}</strong><span>In selected source</span></div>
           <div className="jersey-metric"><small>WATCHED NODES</small><strong>{favorites.length}</strong><span>Favorite devices</span></div>
           <div className="jersey-metric"><small>DATA SOURCE</small><strong>{sourceId ? 'Selected' : 'Default'}</strong><span>Active monitoring scope</span></div>
         </div>
