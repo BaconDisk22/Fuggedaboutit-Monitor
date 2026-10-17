@@ -19,6 +19,8 @@ permissions:
 jobs:
   validate-macos-intel:
     runs-on: macos-15-intel
+    env:
+      NODE_OPTIONS: --max-old-space-size=6144
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
